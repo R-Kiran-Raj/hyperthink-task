@@ -58,13 +58,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
 
   return (
     <StyledCard onClick={handleCardClick}>
-      <PostImage 
+      <PostImage
         src={`/images/post-${post.id % 5 || 1}.jpg`} // Using local images
-        alt="Post" 
+        alt="Post"
       />
       <Title level={4}>{post.title}</Title>
       <Paragraph ellipsis={{ rows: 3 }}>{post.body}</Paragraph>
-      
+
       <ActionButtons onClick={(e) => e.stopPropagation()}>
         <Space>
           <Link to={`/posts/${post.id}/edit`}>

@@ -8,7 +8,7 @@ export const useUser = () => {
 
   useEffect(() => {
     const randomUserId = Math.floor(Math.random() * 10) + 1;
-    
+
     const getUser = async () => {
       try {
         const userData = await fetchUser(randomUserId);

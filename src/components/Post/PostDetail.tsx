@@ -136,7 +136,7 @@ export const PostDetail: React.FC = () => {
   return (
     <DetailContainer>
       <CustomCard
-        cover={<img src={`/images/post-${post.id % 5 || 1}.jpg`} alt="Post"  style={{ maxHeight: '400px', objectFit: 'cover', width: '100%' }}  />}
+        cover={<img src={`/images/post-${post.id % 5 || 1}.jpg`} alt="Post" style={{ maxHeight: '400px', objectFit: 'cover', width: '100%' }} />}
         actions={[
           <EditButton type="primary" onClick={() => navigate(`/posts/${id}/edit`)}>
             Edit Post
