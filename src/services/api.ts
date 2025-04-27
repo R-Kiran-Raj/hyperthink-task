@@ -21,3 +21,8 @@ export const updatePost = async (postId: number, data: any) => {
   const response = await axios.put(`${API_BASE_URL}/posts/${postId}`, data);
   return response.data;
 };
+
+export const deletePost = async (postId: number) => {
+  const response = await axios.delete(`${API_BASE_URL}/posts/${postId}`);
+  return response.data;
+};

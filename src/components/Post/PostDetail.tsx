@@ -1,49 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { fetchPost } from '../../services/api';
 import { Card, Typography, Button, Spin } from 'antd';
 import styled from 'styled-components';
+import { deletePost } from '../../services/api';
 
 const { Title, Paragraph } = Typography;
 
 const DetailContainer = styled.div`
-  margin-left: 250px;
-  padding: 20px;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
 `;
+
 
 export const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getPost = async () => {
+    const loadPost = async () => {
       try {
-        const postData = await fetchPost(Number(id));
-        setPost(postData);
-      } catch (err) {
-        console.error('Failed to fetch post', err);
+        const data = await fetchPost(Number(id));
+        setPost(data);
+      } catch (error) {
+        console.error('Error fetching post:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    getPost();
+    loadPost();
   }, [id]);
+
+  const handleDelete = async (e: React.MouseEvent) => {
+      e.stopPropagation();
+      try {
+        await deletePost(post.id);
+        // if (onDelete) onDelete(post.id);
+      } catch (error) {
+        console.error('Failed to delete post:', error);
+      }
+    };
 
   if (loading) return <Spin size="large" />;
 
   return (
     <DetailContainer>
       <Card
-        cover={<img src={`https://picsum.photos/seed/${id}/800/400`} alt="Post" />}
+        cover={<img src={`/images/post-${post.id % 5 || 1}.jpg`} alt="Post" />}
         actions={[
-          <Link to={`/posts/${id}/edit`}>
-            <Button type="primary">Edit</Button>
-          </Link>,
-          <Link to="/blogs">
-            <Button>Back to List</Button>
-          </Link>,
+          <Button type="primary" onClick={() => navigate(`/posts/${id}/edit`)}>
+            Edit Post
+          </Button>,
+          <Button danger onClick={handleDelete}>Delete</Button>,
+          <Button onClick={() => navigate(-1)}>Back to List</Button>
         ]}
       >
         <Title level={2}>{post?.title}</Title>

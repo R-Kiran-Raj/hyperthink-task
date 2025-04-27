@@ -1,52 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchPost, updatePost } from '../../services/api';
-import { Card, Typography, Button, Spin, Form, Input } from 'antd';
+import { Card, Typography, Button, Spin, Form, Input, message } from 'antd';
 import styled from 'styled-components';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
 
 const EditContainer = styled.div`
-  margin-left: 250px;
-  padding: 20px;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 export const PostEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [post, setPost] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getPost = async () => {
+    const loadPost = async () => {
       try {
-        const postData = await fetchPost(Number(id));
-        setPost(postData);
+        const data = await fetchPost(Number(id));
+        setPost(data);
         form.setFieldsValue({
-          title: postData.title,
-          body: postData.body,
+          title: data.title,
+          body: data.body
         });
-      } catch (err) {
-        console.error('Failed to fetch post', err);
+      } catch (error) {
+        console.error('Error fetching post:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    getPost();
+    loadPost();
   }, [id, form]);
 
   const handleSubmit = async (values: any) => {
     try {
       await updatePost(Number(id), {
         ...post,
-        ...values,
+        ...values
       });
+      message.success('Post updated successfully');
       navigate(`/posts/${id}`);
-    } catch (err) {
-      console.error('Failed to update post', err);
+    } catch (error) {
+      message.error('Failed to update post');
+      console.error('Error updating post:', error);
     }
   };
 
@@ -55,20 +58,36 @@ export const PostEdit: React.FC = () => {
   return (
     <EditContainer>
       <Card
-        cover={<img src={`https://picsum.photos/seed/${id}/800/400`} alt="Post" />}
+        cover={<img src={`/images/post-${post.id % 5 || 1}.jpg`} alt="Post" />}
         actions={[
           <Button type="primary" onClick={() => form.submit()}>
-            Save
+            Save Changes
           </Button>,
-          <Button onClick={() => navigate(`/posts/${id}`)}>Cancel</Button>,
+          <Button onClick={() => navigate(`/posts/${id}`)}>Cancel</Button>
         ]}
       >
         <Title level={2}>Edit Post</Title>
-        <Form form={form} onFinish={handleSubmit} layout="vertical">
-          <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{
+            title: post?.title,
+            body: post?.body
+          }}
+        >
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: 'Please input post title' }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item name="body" label="Content" rules={[{ required: true }]}>
+          <Form.Item
+            name="body"
+            label="Content"
+            rules={[{ required: true, message: 'Please input post content' }]}
+          >
             <TextArea rows={6} />
           </Form.Item>
         </Form>
