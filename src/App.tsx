@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
-import { Sidebar } from './components/Layout';
+import { Navbar, Sidebar } from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Blog from './pages/Blog';
 import { PostDetail } from './components/Post/PostDetail';
@@ -16,7 +16,8 @@ const App: React.FC = () => {
       <Layout style={{ minHeight: '100vh' }}>
         <Sidebar />
         <Layout>
-          <Content style={{ marginLeft: 250, background: '#f5f7fa' }}>
+          <Navbar />
+          <Content style={{ background: '#f5f7fa' }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/blogs" element={<Blog />} />
