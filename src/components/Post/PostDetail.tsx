@@ -115,7 +115,7 @@ export const PostDetail: React.FC = () => {
   const handleDelete = async () => {
     try {
       await deletePost(post.id);
-      navigate('/posts'); // Redirect to the posts list after successful deletion
+      navigate('/blogs'); // Redirect to Blogs after successful deletion
     } catch (error) {
       console.error('Failed to delete post:', error);
     } finally {
@@ -154,7 +154,7 @@ export const PostDetail: React.FC = () => {
       {/* Confirmation Modal */}
       <Modal
         title="Delete Post"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleDelete}
         onCancel={handleCancel}
         okText="Yes, Delete"

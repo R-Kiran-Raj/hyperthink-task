@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../hooks/useUser';
 import { fetchUserPosts } from '../../services/api';
-import { Typography, Card, Divider, Pagination, Tabs, Spin } from 'antd';
+import { Typography, Card, Divider, Pagination, Tabs, Spin, Button } from 'antd';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { BlogHeader } from './BlogHeader';
 
 const { Title, Text } = Typography;
-const { TabPane } = Tabs;
+// Using Antd v5 Tabs with items prop
 
 const BlogContainer = styled.div`
   padding: 40px;
@@ -155,23 +155,50 @@ const Blog: React.FC = () => {
       <BlogHeader />
       <ContentSection>
         <TabContent>
-          <Tabs defaultActiveKey="1" centered>
-            <TabPane tab="All Posts" key="1" />
-            <TabPane tab="Latest Posts" key="2" />
-            <TabPane tab="Archived" key="3" />
-          </Tabs>
+          <Tabs
+            defaultActiveKey="1"
+            centered
+            items={[
+              { key: '1', label: 'All Posts' },
+              { key: '2', label: 'Latest Posts' },
+              { key: '3', label: 'Archived' },
+            ]}
+          />
         </TabContent>
 
         {paginatedPosts.map(post => (
           <PostCard key={post.id} bordered={false}>
-            <PostImage src={`https://picsum.photos/seed/${post.id}/300/300`} alt="Post" />
+            <PostImage src={`/images/post-${post.id % 5 || 1}.jpg`} alt="Post" />
             <PostDetails>
               <PostHeader>
                 <PostTitle level={4}>{post.title}</PostTitle>
                 <PostDate>{new Date().toLocaleDateString()}</PostDate>
               </PostHeader>
               <PostContent>{post.body}</PostContent>
-              <ReadMoreLink to={`/posts/${post.id}`}>Read more</ReadMoreLink>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+                <ReadMoreLink to={`/posts/${post.id}`}>Read more</ReadMoreLink>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <Link to={`/posts/${post.id}/edit`}>
+                    <Button type="primary">Edit</Button>
+                  </Link>
+                  <Button
+                    danger
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      try {
+                        const { deletePost } = await import('../../services/api');
+                        await deletePost(post.id);
+                        setPosts(prev => prev.filter(p => p.id !== post.id));
+                      } catch (err) {
+                        console.error('Failed to delete post', err);
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
             </PostDetails>
           </PostCard>
         ))}

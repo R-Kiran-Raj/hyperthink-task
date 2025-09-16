@@ -133,9 +133,9 @@ export const Sidebar: React.FC = () => {
       </UserProfileContainer>
 
       <StyledMenu mode="inline" selectable={false}>
-        <Menu.ItemGroup key="dashboards" title="Dashboards">
-          <Menu.Item key="overview" icon={<BarChartOutlined />}>
-            <Link to="/">Overview</Link>
+        <Menu.ItemGroup key="dashboards" title="Navigation">
+          <Menu.Item key="dashboard" icon={<BarChartOutlined />}>
+            <Link to="/">Dashboard</Link>
           </Menu.Item>
           <Menu.Item key="calendar" icon={<CalendarOutlined />}>
             Calendar
@@ -148,8 +148,8 @@ export const Sidebar: React.FC = () => {
           </Menu.Item>
         </Menu.ItemGroup>
         <Menu.ItemGroup key="blogs" title="Blogs">
-          <Menu.Item key="all" icon={<SmileOutlined />}>
-            <Link to="/blogs">All</Link>
+          <Menu.Item key="blogs-link" icon={<SmileOutlined />}>
+            <Link to="/blogs">Blogs</Link>
           </Menu.Item>
           <Menu.Item key="latest" icon={<InfoCircleOutlined />}>
             Latest

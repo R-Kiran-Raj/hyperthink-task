@@ -168,7 +168,7 @@ export const PostEdit: React.FC = () => {
       {/* Confirmation Modal */}
       <Modal
         title="Cancel Changes"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleCancelConfirm}
         onCancel={() => setIsModalVisible(false)}
         okText="Yes, Cancel"
