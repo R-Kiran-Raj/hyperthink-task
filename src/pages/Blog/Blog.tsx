@@ -29,8 +29,7 @@ const ContentSection = styled.div`
 
 const TabContent = styled.div`
   width: 100%;
-      display: flex
-;
+      display: flex;
 
 `;
 
@@ -115,6 +114,7 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [activeTab, setActiveTab] = useState<string>('1');
   const pageSize = 4;
 
   useEffect(() => {
@@ -134,7 +134,25 @@ const Blog: React.FC = () => {
     }
   }, [user]);
 
-  const paginatedPosts = posts.slice(
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
+
+  const filteredPosts = React.useMemo(() => {
+    if (activeTab === '2') {
+      // Latest posts: sort by id descending
+      return [...posts].sort((a, b) => b.id - a.id);
+    }
+    if (activeTab === '3') {
+      // Archived: first half by id ascending (simulated archive)
+      const sorted = [...posts].sort((a, b) => a.id - b.id);
+      const half = Math.floor(sorted.length / 2);
+      return sorted.slice(0, half);
+    }
+    return posts;
+  }, [activeTab, posts]);
+
+  const paginatedPosts = filteredPosts.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -156,7 +174,8 @@ const Blog: React.FC = () => {
       <ContentSection>
         <TabContent>
           <Tabs
-            defaultActiveKey="1"
+            activeKey={activeTab}
+            onChange={(key) => setActiveTab(key)}
             centered
             items={[
               { key: '1', label: 'All Posts' },
@@ -206,7 +225,7 @@ const Blog: React.FC = () => {
         <PaginationContainer>
           <Pagination
             current={currentPage}
-            total={posts.length}
+            total={filteredPosts.length}
             pageSize={pageSize}
             onChange={(page) => setCurrentPage(page)}
             showSizeChanger={false}

@@ -5,8 +5,7 @@ import styled from 'styled-components';
 const { Title } = Typography;
 
 const ContentContainer = styled.div`
-  margin-left: 250px;
-  padding: 20px;
+  padding: 0;
 `;
 
 const Dashboard: React.FC = () => {

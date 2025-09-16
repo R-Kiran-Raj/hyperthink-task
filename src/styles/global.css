@@ -9,3 +9,25 @@ body {
 #root {
   height: 100%;
 }
+
+:root {
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #f0f0f0;
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --radius-md: 12px;
+}
+
+/* Smooth custom scrollbar for webkit */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
